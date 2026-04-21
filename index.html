@@ -7,6 +7,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!--suppress JSUnresolvedLibraryURL -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -40,8 +41,8 @@
 
     <div class="mb-6 text-left">
         <div id="players-list" class="space-y-3">
-            <input type="text" class="player-input w-full bg-zinc-950 border border-zinc-700 text-white p-3 rounded-xl focus:border-red-500 focus:outline-none transition-colors" value="Jogador 1">
-            <input type="text" class="player-input w-full bg-zinc-950 border border-zinc-700 text-white p-3 rounded-xl focus:border-red-500 focus:outline-none transition-colors" value="Jogador 2">
+            <input type="text" aria-label="Nome do Jogador 2" class="player-input w-full bg-zinc-950 border border-zinc-700 text-white p-3 rounded-xl focus:border-red-500 focus:outline-none transition-colors" value="Jogador 1">
+            <input type="text" aria-label="Nome do Jogador 2" class="player-input w-full bg-zinc-950 border border-zinc-700 text-white p-3 rounded-xl focus:border-red-500 focus:outline-none transition-colors" value="Jogador 2">
         </div>
         <button onclick="addPlayerInput()" id="add-player-btn" class="mt-3 text-red-400 hover:text-red-300 text-sm font-bold flex items-center gap-1 transition-colors">
             <i class="fa-solid fa-user-plus"></i> Adicionar Jogador

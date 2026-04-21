@@ -70,6 +70,7 @@ function addPlayerInput() {
 
     const input = document.createElement('input');
     input.type = 'text';
+    input.setAttribute('aria-label', `Nome do Jogador ${count + 1}`);
     input.className = 'player-input w-full bg-zinc-950 border border-zinc-700 text-white p-3 rounded-xl focus:border-red-500 focus:outline-none transition-colors';
     input.value = `Jogador ${count + 1}`;
     UIElements.playersList.appendChild(input);
@@ -140,7 +141,7 @@ function nextRound() {
 
     while(cards.length < 5) {
         cards.push({
-            id: Math.random().toString(36).substr(2, 9),
+            id: Math.random().toString(36).substring(2, 9),
             value: Math.floor(Math.random() * 10) + 1,
             used: false
         });
@@ -344,13 +345,11 @@ function renderEquation() {
         return;
     }
 
-    const displayStr = currentEquation.map(item => {
+    UIElements.equation.textContent = currentEquation.map(item => {
         if(item.value === '*') return '×';
         if(item.value === '/') return '÷';
         return item.value;
     }).join(' ');
-
-    UIElements.equation.textContent = displayStr;
 }
 
 function submitEquation() {
