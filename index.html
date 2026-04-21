@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pitágoras Virtual - Desafio Matemático</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+
+<div id="main-menu" class="max-w-md w-full bg-zinc-900 rounded-3xl p-8 shadow-2xl text-center border-t-4 border-red-600">
+    <h1 class="text-4xl font-extrabold text-white mb-2 tracking-tight">
+        <i class="fa-solid fa-calculator mr-2 text-red-600"></i>Pitágoras <span class="text-red-500">Virtual</span>
+    </h1>
+    <p class="text-zinc-400 mb-8 text-sm">Escolha o modo de jogo</p>
+
+    <div class="space-y-4">
+        <button onclick="setMode('SINGLE')" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-5 rounded-xl text-xl shadow-[0_4px_0_rgb(153,27,27)] hover:shadow-[0_2px_0_rgb(153,27,27)] hover:translate-y-[2px] transition-all flex flex-col items-center">
+            <i class="fa-solid fa-user mb-1 text-2xl"></i>
+            <span>1 Jogador</span>
+            <span class="text-xs font-normal opacity-80 mt-1">Contra o Relógio (90s)</span>
+        </button>
+
+        <button onclick="setMode('MULTI')" class="w-full bg-rose-700 hover:bg-rose-800 text-white font-bold py-5 rounded-xl text-xl shadow-[0_4px_0_rgb(159,18,57)] hover:shadow-[0_2px_0_rgb(159,18,57)] hover:translate-y-[2px] transition-all flex flex-col items-center">
+            <i class="fa-solid fa-users mb-1 text-2xl"></i>
+            <span>Multiplayer Local</span>
+            <span class="text-xs font-normal opacity-80 mt-1">Disputa de Buzzers (Sem tempo)</span>
+        </button>
+    </div>
+</div>
+
+<div id="multi-setup" class="max-w-md w-full bg-zinc-900 rounded-3xl p-8 shadow-2xl text-center border-t-4 border-rose-600 hidden">
+    <h2 class="text-3xl font-extrabold text-white mb-2 tracking-tight"><i class="fa-solid fa-users-gear mr-2"></i>Jogadores</h2>
+    <p class="text-zinc-400 mb-6 text-sm">Adicione de 1 a 4 jogadores</p>
+
+    <div class="mb-6 text-left">
+        <div id="players-list" class="space-y-3">
+            <input type="text" class="player-input w-full bg-zinc-950 border border-zinc-700 text-white p-3 rounded-xl focus:border-red-500 focus:outline-none transition-colors" value="Jogador 1">
+            <input type="text" class="player-input w-full bg-zinc-950 border border-zinc-700 text-white p-3 rounded-xl focus:border-red-500 focus:outline-none transition-colors" value="Jogador 2">
+        </div>
+        <button onclick="addPlayerInput()" id="add-player-btn" class="mt-3 text-red-400 hover:text-red-300 text-sm font-bold flex items-center gap-1 transition-colors">
+            <i class="fa-solid fa-user-plus"></i> Adicionar Jogador
+        </button>
+    </div>
+
+    <div class="flex gap-3">
+        <button onclick="backToMenu()" class="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-4 rounded-xl shadow-[0_4px_0_rgb(63,63,70)] hover:translate-y-[2px] transition-all">
+            <i class="fa-solid fa-arrow-left mr-1"></i> VOLTAR
+        </button>
+        <button onclick="startMultiplayer()" class="flex-[2] bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-[0_4px_0_rgb(153,27,27)] hover:translate-y-[2px] transition-all">
+            INICIAR <i class="fa-solid fa-play ml-1"></i>
+        </button>
+    </div>
+</div>
+
+<div id="game-screen" class="max-w-lg w-full bg-zinc-900 rounded-3xl p-6 shadow-2xl hidden border-t-4 border-red-700">
+
+    <div id="single-header" class="hidden justify-between items-center mb-6 bg-zinc-950 p-4 rounded-2xl">
+        <div class="text-center">
+            <p class="text-xs text-zinc-400 font-bold uppercase tracking-wider">Pontos</p>
+            <p id="single-score-display" class="text-2xl font-black text-amber-400">0</p>
+        </div>
+        <div class="text-center">
+            <p class="text-xs text-zinc-400 font-bold uppercase tracking-wider">Tempo</p>
+            <p id="time-display" class="text-2xl font-black text-orange-500">90s</p>
+        </div>
+    </div>
+
+    <div id="multi-header" class="hidden justify-between items-start mb-6">
+        <div id="scoreboard" class="flex-1 flex flex-wrap gap-2">
+        </div>
+        <button onclick="endGame()" class="ml-4 px-3 py-2 bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg text-xs font-bold transition-colors">
+            <i class="fa-solid fa-flag-checkered mr-1"></i> Encerrar
+        </button>
+    </div>
+
+    <div class="flex flex-col items-center justify-center mb-8">
+        <p class="text-sm font-bold text-zinc-400 uppercase tracking-widest mb-1">Chegue no Alvo</p>
+        <div class="w-32 h-32 bg-gradient-to-br from-red-600 to-rose-900 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(225,29,72,0.3)] border-4 border-zinc-950 ring-4 ring-red-600/30">
+            <span id="target-display" class="text-5xl font-black text-white">24</span>
+        </div>
+    </div>
+
+    <div class="mb-6">
+        <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 text-center">Cartas na Mesa</p>
+        <div id="cards-container" class="flex justify-center gap-2 sm:gap-3">
+        </div>
+    </div>
+
+    <div class="mb-6">
+        <div id="operators-container" class="flex justify-center gap-2 sm:gap-4 transition-opacity">
+            <button onclick="addOperator('+')" class="card-pop w-12 h-12 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-2xl font-bold text-white shadow-md"><i class="fa-solid fa-plus text-lg"></i></button>
+            <button onclick="addOperator('-')" class="card-pop w-12 h-12 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-2xl font-bold text-white shadow-md"><i class="fa-solid fa-minus text-lg"></i></button>
+            <button onclick="addOperator('*')" class="card-pop w-12 h-12 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-2xl font-bold text-white shadow-md"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <button onclick="addOperator('/')" class="card-pop w-12 h-12 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-2xl font-bold text-white shadow-md"><i class="fa-solid fa-divide text-lg"></i></button>
+        </div>
+    </div>
+
+    <div class="bg-zinc-950 rounded-xl p-4 mb-6 min-h-[80px] flex flex-col items-center justify-center border-2 border-dashed border-zinc-800 relative">
+        <span id="turn-indicator" class="absolute top-2 left-3 text-[10px] font-bold text-red-400 uppercase tracking-wider hidden">Vez de: <span id="turn-name"></span></span>
+        <p id="equation-display" class="text-2xl font-bold text-red-400 tracking-wider mt-2">
+            ...
+        </p>
+    </div>
+
+    <div id="buzzer-area" class="mt-2 hidden">
+        <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 text-center"><i class="fa-solid fa-hand-pointer mr-1"></i> Quem sabe a resposta?</p>
+        <div id="buzzers-container" class="grid grid-cols-2 gap-3">
+        </div>
+    </div>
+
+    <div id="action-area" class="flex flex-col gap-3 mt-2">
+        <div class="flex gap-2">
+            <button id="btn-cancel-turn" onclick="cancelTurn()" class="hidden flex-1 bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 rounded-xl shadow-[0_4px_0_rgb(63,63,70)] active:shadow-[0_0px_0_rgb(63,63,70)] active:translate-y-[4px] transition-all text-sm">
+                <i class="fa-solid fa-xmark mr-1"></i> CANCELAR
+            </button>
+            <button onclick="clearEquation()" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-xl shadow-[0_4px_0_rgb(194,65,12)] active:shadow-[0_0px_0_rgb(194,65,12)] active:translate-y-[4px] transition-all text-sm">
+                <i class="fa-solid fa-eraser mr-1"></i> LIMPAR
+            </button>
+        </div>
+        <button onclick="submitEquation()" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-4 rounded-xl shadow-[0_4px_0_rgb(153,27,27)] active:shadow-[0_0px_0_rgb(153,27,27)] active:translate-y-[4px] transition-all text-lg mt-1">
+            <i class="fa-solid fa-paper-plane mr-1"></i> ENVIAR RESPOSTA
+        </button>
+    </div>
+
+    <div class="mt-4 text-center">
+        <button onclick="skipRound()" class="text-zinc-500 hover:text-zinc-300 text-sm font-semibold underline transition-colors">
+            <span id="skip-text">Pular Rodada</span>
+        </button>
+    </div>
+</div>
+
+<div id="end-screen" class="max-w-md w-full bg-zinc-900 rounded-3xl p-8 shadow-2xl text-center hidden border-t-4 border-orange-500">
+    <h2 class="text-4xl font-extrabold text-white mb-2"><i class="fa-solid fa-trophy mr-2 text-orange-500"></i>Fim de Jogo!</h2>
+    <p id="end-subtitle" class="text-zinc-400 mb-6">Resultados</p>
+
+    <div id="single-end-content" class="bg-zinc-950 rounded-2xl p-6 mb-8 inline-block w-full hidden border border-zinc-800">
+        <p class="text-sm text-zinc-400 font-bold uppercase tracking-widest mb-1">Pontuação Final</p>
+        <p id="final-score" class="text-6xl font-black text-amber-400">0</p>
+    </div>
+
+    <div id="multi-end-content" class="bg-zinc-950 rounded-2xl p-6 mb-8 flex flex-col gap-3 w-full text-left hidden border border-zinc-800">
+
+    </div>
+
+    <button onclick="location.reload()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl text-xl shadow-[0_4px_0_rgb(153,27,27)] hover:translate-y-[2px] transition-all">
+        <i class="fa-solid fa-house mr-1"></i> VOLTAR AO MENU
+    </button>
+</div>
+
+<footer class="mt-8 text-zinc-500 text-sm font-semibold z-10">
+    Desenvolvido com <i class="fa-regular fa-heart text-lg mr-1 align-middle text-red-500"></i>por <a href="https://github.com/lhgomesdev" target="_blank" class="text-red-500 hover:text-red-400 transition-colors"><i class="fa-brands fa-square-github text-lg mr-1 align-middle"></i>lhgomesdev</a>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
