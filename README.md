@@ -2,6 +2,9 @@
 
 Uma versão digital e de código aberto inspirada no famoso party game de matemática "Pitágoras", de **Reiner Knizia**, publicado pela Adoleta Jogos. Treine seu raciocínio lógico e velocidade em desafios matemáticos dinâmicos!
 
+## 🔷️ Acesse o site para jogar
+[Link do Site](https://lhgomesdev.github.io/pitagorasVirtual/)
+
 ## 🎮 Modos de Jogo
 
 * **1 Jogador (Time Attack):** Você contra o relógio. 90 segundos para resolver o máximo de equações que conseguir. Quanto mais cartas usar na equação, mais pontos você ganha!
