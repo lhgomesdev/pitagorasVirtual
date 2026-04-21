@@ -44,7 +44,8 @@ const UIElements = {
     equation: document.getElementById('equation-display'),
     actionArea: document.getElementById('action-area'),
     skipText: document.getElementById('skip-text'),
-    endSubtitle: document.getElementById('end-subtitle')
+    endSubtitle: document.getElementById('end-subtitle'),
+    rulesModal: document.getElementById('rules-modal')
 };
 
 function setMode(mode) {
@@ -76,6 +77,14 @@ function addPlayerInput() {
     UIElements.playersList.appendChild(input);
 
     if (count + 1 >= 4) UIElements.addPlayerBtn.classList.add('hidden');
+}
+
+function openRules() {
+    UIElements.rulesModal.classList.remove('hidden');
+}
+
+function closeRules() {
+    UIElements.rulesModal.classList.add('hidden');
 }
 
 function startSingleplayer() {

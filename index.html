@@ -26,7 +26,7 @@
         <button onclick="setMode('SINGLE')" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-5 rounded-xl text-xl shadow-[0_4px_0_rgb(153,27,27)] hover:shadow-[0_2px_0_rgb(153,27,27)] hover:translate-y-[2px] transition-all flex flex-col items-center">
             <i class="fa-solid fa-user mb-1 text-2xl"></i>
             <span>1 Jogador</span>
-            <span class="text-xs font-normal opacity-80 mt-1">Contra o Relógio (90s)</span>
+            <span class="text-xs font-normal opacity-80 mt-1">Contra o Relógio (120s)</span>
         </button>
 
         <button onclick="setMode('MULTI')" class="w-full bg-rose-700 hover:bg-rose-800 text-white font-bold py-5 rounded-xl text-xl shadow-[0_4px_0_rgb(159,18,57)] hover:shadow-[0_2px_0_rgb(159,18,57)] hover:translate-y-[2px] transition-all flex flex-col items-center">
@@ -34,6 +34,13 @@
             <span>Multiplayer Local</span>
             <span class="text-xs font-normal opacity-80 mt-1">Disputa de Buzzers (Sem tempo)</span>
         </button>
+
+        <div class="space-y-4">
+            <button onclick="openRules()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-4 rounded-xl shadow-[0_4px_0_rgb(39,39,42)] hover:translate-y-[2px] transition-all flex justify-center items-center gap-2 mt-4">
+                <i class="fa-solid fa-book-open"></i> Ler as Regras
+            </button>
+        </div>
+
     </div>
 </div>
 
@@ -154,6 +161,44 @@
     <button onclick="location.reload()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl text-xl shadow-[0_4px_0_rgb(153,27,27)] hover:translate-y-[2px] transition-all">
         <i class="fa-solid fa-house mr-1"></i> VOLTAR AO MENU
     </button>
+</div>
+
+<div id="rules-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity">
+    <div class="bg-zinc-900 border-t-4 border-red-600 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl relative">
+        <button onclick="closeRules()" class="absolute top-4 right-4 text-zinc-500 hover:text-red-500 transition-colors text-2xl">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <h2 class="text-3xl font-extrabold text-white mb-4"><i class="fa-solid fa-scroll text-red-500 mr-2"></i>Como Jogar</h2>
+
+        <div class="space-y-4 text-zinc-300 text-sm max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+
+            <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
+                <h3 class="font-bold text-red-400 mb-1"><i class="fa-solid fa-bullseye mr-1"></i> Objetivo Principal</h3>
+                <p>Você terá 5 cartas na mesa. Seu objetivo é usar operações matemáticas (<span class="font-bold text-white">+, -, ×, ÷</span>) com essas cartas para chegar no número exato do <strong class="text-white">Alvo Central</strong>. Lembrando que quanto mais cartas usar, mais pontos você faz!</p>
+            </div>
+
+            <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
+                <h3 class="font-bold text-red-400 mb-1"><i class="fa-solid fa-star mr-1"></i> Pontuação</h3>
+                <p>Quanto mais cartas você usar na sua equação, mais pontos você ganha! O algoritmo garante que sempre existe <strong class="text-white"> pelo menos uma solução possível </strong> com as cartas da mesa. Mesmo que seja com poucas cartas.</p>
+            </div>
+
+            <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
+                <h3 class="font-bold text-red-400 mb-1"><i class="fa-solid fa-user mr-1"></i> Modo 1 Jogador</h3>
+                <p>Você joga contra o relógio. São <strong class="text-white">120 segundos</strong> para acertar o maior número de equações possíveis e bater seu próprio recorde.</p>
+            </div>
+
+            <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
+                <h3 class="font-bold text-red-400 mb-1"><i class="fa-solid fa-users mr-1"></i> Modo Multiplayer</h3>
+                <p>Sem limite de tempo! O jogo exige reflexo: <strong class="text-white">TODOS</strong> pensam ao mesmo tempo. Quem descobrir a resposta primeiro clica no seu nome para roubar a vez. Se errar, o jogador fica <strong class="text-red-500">bloqueado</strong> até a próxima rodada, então não erre!</p>
+            </div>
+
+        </div>
+
+        <button onclick="closeRules()" class="w-full mt-6 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl shadow-[0_4px_0_rgb(153,27,27)] active:translate-y-[4px] transition-all">
+            ENTENDI, VAMOS LÁ!
+        </button>
+    </div>
 </div>
 
 <footer class="mt-8 text-zinc-500 text-sm font-semibold z-10">
