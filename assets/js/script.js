@@ -15,6 +15,10 @@ let multiGameState = 'BUZZER'; // 'BUZZER' | 'ANSWERING'
 let currentEquation = [];
 let expecting = 'number';
 
+const CARD_COLORS = ['card--sun', 'card--sky', 'card--leaf', 'card--coral', 'card--tangerine'];
+
+const PLAYER_COLORS = ['player-sky', 'player-leaf', 'player-coral', 'player-grape'];
+
 const UIElements = {
     mainMenu: document.getElementById('main-menu'),
     multiSetup: document.getElementById('multi-setup'),
@@ -45,8 +49,28 @@ const UIElements = {
     actionArea: document.getElementById('action-area'),
     skipText: document.getElementById('skip-text'),
     endSubtitle: document.getElementById('end-subtitle'),
-    rulesModal: document.getElementById('rules-modal')
+    rulesModal: document.getElementById('rules-modal'),
+
+    bestScoreBadge: document.getElementById('best-score-badge'),
+    bestScoreValue: document.getElementById('best-score-value'),
+    newRecordBadge: document.getElementById('new-record-badge'),
+    soundIcon: document.getElementById('sound-icon')
 };
+
+function updateBestScoreBadge() {
+    const best = getBestScore();
+    if (best > 0) {
+        UIElements.bestScoreValue.textContent = best;
+        UIElements.bestScoreBadge.classList.remove('hidden');
+    }
+}
+
+function updateSoundToggleUI() {
+    UIElements.soundIcon.className = soundEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+}
+
+updateBestScoreBadge();
+updateSoundToggleUI();
 
 function setMode(mode) {
     gameMode = mode;
@@ -72,7 +96,7 @@ function addPlayerInput() {
     const input = document.createElement('input');
     input.type = 'text';
     input.setAttribute('aria-label', `Nome do Jogador ${count + 1}`);
-    input.className = 'player-input w-full bg-zinc-950 border border-zinc-700 text-white p-3 rounded-xl focus:border-red-500 focus:outline-none transition-colors';
+    input.className = 'player-input text-input';
     input.value = `Jogador ${count + 1}`;
     UIElements.playersList.appendChild(input);
 
@@ -94,14 +118,12 @@ function startSingleplayer() {
     updateTime();
 
     UIElements.singleHeader.classList.remove('hidden');
-    UIElements.singleHeader.classList.add('flex');
     UIElements.multiHeader.classList.add('hidden');
     UIElements.buzzerArea.classList.add('hidden');
     UIElements.btnCancelTurn.classList.add('hidden');
     UIElements.actionArea.classList.remove('hidden');
-    UIElements.operators.classList.remove('opacity-50', 'pointer-events-none');
-    UIElements.equation.classList.add('text-red-400');
-    UIElements.equation.classList.remove('text-zinc-500');
+    UIElements.operators.classList.remove('is-disabled');
+    UIElements.equation.classList.remove('is-waiting');
     UIElements.skipText.textContent = "Não encontro a resposta (-5 pts)";
 
     UIElements.game.classList.remove('hidden');
@@ -114,14 +136,13 @@ function startSingleplayer() {
 
 function startMultiplayer() {
     const inputs = document.querySelectorAll('.player-input');
-    const themeColors = ['bg-red-600', 'bg-rose-600', 'bg-orange-600', 'bg-amber-600'];
 
     players = Array.from(inputs).map((input, index) => ({
         id: index,
         name: input.value.trim() || `Jogador ${index + 1}`,
         score: 0,
         locked: false,
-        color: themeColors[index]
+        color: PLAYER_COLORS[index]
     }));
 
     if (players.length === 0) return;
@@ -129,7 +150,6 @@ function startMultiplayer() {
     UIElements.multiSetup.classList.add('hidden');
 
     UIElements.multiHeader.classList.remove('hidden');
-    UIElements.multiHeader.classList.add('flex');
     UIElements.singleHeader.classList.add('hidden');
     UIElements.btnCancelTurn.classList.remove('hidden');
     UIElements.skipText.textContent = "Ninguém sabe (Nova Rodada)";
@@ -189,15 +209,16 @@ function generateSmartTarget() {
     if(!targetFound) targetNumber = Math.floor(Math.random() * 20) + 5;
 
     UIElements.target.textContent = targetNumber;
-    UIElements.target.parentElement.classList.remove('scale-110');
+    UIElements.target.parentElement.classList.remove('is-pulsing');
     void UIElements.target.parentElement.offsetWidth;
-    UIElements.target.parentElement.classList.add('scale-110', 'transition-transform');
-    setTimeout(() => UIElements.target.parentElement.classList.remove('scale-110'), 200);
+    UIElements.target.parentElement.classList.add('is-pulsing');
+    setTimeout(() => UIElements.target.parentElement.classList.remove('is-pulsing'), 200);
 }
 
 function gameTick() {
     timeLeft--;
     updateTime();
+    if (timeLeft <= 10 && timeLeft > 0) playTick();
     if (timeLeft <= 0) {
         endGame();
     }
@@ -205,17 +226,17 @@ function gameTick() {
 
 function updateTime() {
     UIElements.timeDisplay.textContent = timeLeft + 's';
-    if(timeLeft <= 10) UIElements.timeDisplay.classList.replace('text-orange-500', 'text-red-600');
+    if (timeLeft <= 10) UIElements.timeDisplay.classList.add('is-critical');
 }
 
 function updateScoreboard() {
     UIElements.scoreboard.innerHTML = '';
     players.forEach(p => {
         const div = document.createElement('div');
-        div.className = `flex-1 min-w-[80px] bg-zinc-950 p-2 rounded-xl text-center border-b-2 border-zinc-800`;
+        div.className = `score-tile ${p.color}`;
         div.innerHTML = `
-            <p class="text-[10px] text-zinc-400 font-bold uppercase truncate" title="${p.name}">${p.name}</p>
-            <p class="text-xl font-black ${p.color.replace('bg-', 'text-')}">${p.score}</p>
+            <p class="score-tile__name" title="${p.name}">${p.name}</p>
+            <p class="score-tile__value">${p.score}</p>
         `;
         UIElements.scoreboard.appendChild(div);
     });
@@ -228,12 +249,12 @@ function renderBuzzers() {
     players.forEach((p, index) => {
         const btn = document.createElement('button');
         if (p.locked) {
-            btn.className = `w-full bg-zinc-800 text-zinc-500 font-bold py-4 rounded-xl opacity-50 cursor-not-allowed`;
-            btn.innerHTML = `<i class="fa-solid fa-lock mr-1"></i> ${p.name}`;
+            btn.className = 'buzzer buzzer--locked';
+            btn.innerHTML = `<i class="fa-solid fa-lock"></i> ${p.name}`;
             btn.disabled = true;
         } else {
             allLocked = false;
-            btn.className = `w-full ${p.color} hover:opacity-90 text-white font-bold py-4 rounded-xl shadow-[0_4px_0_rgba(0,0,0,0.2)] active:translate-y-[4px] active:shadow-none transition-all`;
+            btn.className = `buzzer ${p.color}`;
             btn.textContent = p.name;
             btn.onclick = () => buzzIn(index);
         }
@@ -247,6 +268,7 @@ function renderBuzzers() {
 
 function buzzIn(playerIndex) {
     currentPlayerIndex = playerIndex;
+    playBuzz();
     setAnsweringState();
 }
 
@@ -263,11 +285,10 @@ function setBuzzerState() {
     UIElements.buzzerArea.classList.remove('hidden');
     UIElements.actionArea.classList.add('hidden');
     UIElements.turnIndicator.classList.add('hidden');
-    UIElements.operators.classList.add('opacity-50', 'pointer-events-none');
+    UIElements.operators.classList.add('is-disabled');
 
     UIElements.equation.textContent = 'Aguardando...';
-    UIElements.equation.classList.add('text-zinc-500');
-    UIElements.equation.classList.remove('text-red-400');
+    UIElements.equation.classList.add('is-waiting');
 
     renderBuzzers();
     renderCards();
@@ -279,17 +300,15 @@ function setAnsweringState() {
 
     UIElements.buzzerArea.classList.add('hidden');
     UIElements.actionArea.classList.remove('hidden');
-    UIElements.actionArea.classList.add('flex');
 
     UIElements.turnIndicator.classList.remove('hidden');
     UIElements.turnName.textContent = player.name;
-    UIElements.turnName.className = player.color.replace('bg-', 'text-');
+    UIElements.turnName.className = `turn-indicator__name ${player.color}`;
 
-    UIElements.operators.classList.remove('opacity-50', 'pointer-events-none');
+    UIElements.operators.classList.remove('is-disabled');
 
     UIElements.equation.textContent = '...';
-    UIElements.equation.classList.remove('text-zinc-500');
-    UIElements.equation.classList.add('text-red-400');
+    UIElements.equation.classList.remove('is-waiting');
 
     renderCards();
 }
@@ -303,9 +322,8 @@ function renderCards() {
         if (gameMode === 'MULTI' && multiGameState === 'BUZZER') isClickable = false;
         if (c.used) isClickable = false;
 
-        let disabledClass = (!isClickable) ? 'disabled-card opacity-50' : 'card-pop cursor-pointer shadow-[0_4px_0_rgb(212,212,216)]';
-
-        btn.className = `w-12 h-16 sm:w-16 sm:h-20 bg-zinc-100 rounded-xl flex items-center justify-center text-2xl sm:text-3xl font-black text-zinc-900 border-2 border-zinc-300 ${disabledClass}`;
+        const color = CARD_COLORS[index % CARD_COLORS.length];
+        btn.className = `card ${color}${isClickable ? '' : ' card--disabled'}`;
         btn.textContent = c.value;
 
         if (isClickable) {
@@ -324,6 +342,7 @@ function addCard(index) {
     currentEquation.push({ type: 'number', value: cards[index].value.toString(), cardId: cards[index].id });
     expecting = 'operator';
 
+    playClick();
     renderCards();
     renderEquation();
 }
@@ -335,6 +354,7 @@ function addOperator(op) {
     currentEquation.push({ type: 'operator', value: op });
     expecting = 'number';
 
+    playClick();
     renderEquation();
 }
 
@@ -398,20 +418,20 @@ function successRound(finalEq) {
     const usedIds = finalEq.filter(i => i.type === 'number').map(i => i.cardId);
     cards = cards.filter(c => !usedIds.includes(c.id));
 
-    UIElements.equation.classList.remove('text-red-400');
-    UIElements.equation.classList.add('text-amber-400');
+    playSuccess();
+    UIElements.equation.classList.add('is-success');
 
     setTimeout(() => {
-        UIElements.equation.classList.remove('text-amber-400');
-        UIElements.equation.classList.add('text-red-400');
+        UIElements.equation.classList.remove('is-success');
         nextRound();
     }, gameMode === 'SINGLE' ? 500 : 1000);
 }
 
 function failRound() {
-    UIElements.equation.classList.add('text-rose-600', 'animate-pulse');
+    playFail();
+    UIElements.equation.classList.add('is-fail');
     setTimeout(() => {
-        UIElements.equation.classList.remove('text-rose-600', 'animate-pulse');
+        UIElements.equation.classList.remove('is-fail');
 
         if (gameMode === 'SINGLE') {
             clearEquation();
@@ -437,11 +457,15 @@ function endGame() {
     UIElements.end.classList.remove('hidden');
 
     if (gameMode === 'SINGLE') {
+        const isRecord = registerSingleplayerResult(singleScore);
         UIElements.endSubtitle.textContent = "O tempo acabou.";
         UIElements.singleEndContent.classList.remove('hidden');
         UIElements.multiEndContent.classList.add('hidden');
         UIElements.finalScore.textContent = singleScore;
+        UIElements.newRecordBadge.classList.toggle('hidden', !isRecord);
+        updateBestScoreBadge();
     } else {
+        registerMultiplayerResult(players);
         UIElements.endSubtitle.textContent = "Confira o pódio dos grandes matemáticos.";
         UIElements.singleEndContent.classList.add('hidden');
         UIElements.multiEndContent.classList.remove('hidden');
@@ -450,17 +474,17 @@ function endGame() {
         UIElements.multiEndContent.innerHTML = '';
 
         sortedPlayers.forEach((p, index) => {
-            let medal = index === 0 ? '<i class="fa-solid fa-medal text-yellow-400"></i>' :
-                index === 1 ? '<i class="fa-solid fa-medal text-zinc-300"></i>' :
-                    index === 2 ? '<i class="fa-solid fa-medal text-orange-700"></i>' : '<i class="fa-solid fa-thumbs-up text-zinc-500"></i>';
+            let medal = index === 0 ? '<i class="fa-solid fa-medal medal medal--gold"></i>' :
+                index === 1 ? '<i class="fa-solid fa-medal medal medal--silver"></i>' :
+                    index === 2 ? '<i class="fa-solid fa-medal medal medal--bronze"></i>' : '<i class="fa-solid fa-thumbs-up medal medal--none"></i>';
             const div = document.createElement('div');
-            div.className = `flex justify-between items-center p-4 rounded-xl ${index === 0 ? 'bg-orange-500/20 border border-orange-500/50' : 'bg-zinc-800'}`;
+            div.className = `podium-row ${p.color}${index === 0 ? ' podium-row--first' : ''}`;
             div.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <span class="text-2xl">${medal}</span>
-                    <span class="font-bold text-white text-lg">${p.name}</span>
+                <div class="podium-row__player">
+                    <span class="podium-row__medal">${medal}</span>
+                    <span class="podium-row__name">${p.name}</span>
                 </div>
-                <span class="font-black text-2xl ${p.color.replace('bg-', 'text-')}">${p.score} pt</span>
+                <span class="podium-row__score">${p.score} pt</span>
             `;
             UIElements.multiEndContent.appendChild(div);
         });
