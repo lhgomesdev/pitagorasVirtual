@@ -3,6 +3,7 @@
 :root {
     --color-cream: #FFF7E6;
     --color-ink: #241B33;
+    --color-ink-muted: #6B6473;
     --color-white: #FFFFFF;
 
     --color-grape: #7C3AED;
@@ -111,7 +112,7 @@ input:focus-visible {
 
 .icon {
     color: var(--color-tangerine);
-    margin-right: 0.4rem;
+    margin-inline-end: 0.4rem;
 }
 
 .title .accent {
@@ -122,7 +123,7 @@ input:focus-visible {
 .icon--sun { color: var(--color-sun-dark); }
 
 .subtitle {
-    color: rgba(36, 27, 51, 0.6);
+    color: var(--color-ink-muted);
     font-size: 0.875rem;
     font-weight: 600;
     margin: 0 0 0.5rem;
@@ -139,7 +140,7 @@ input:focus-visible {
 .section-label {
     font-family: var(--font-display);
     font-weight: 700;
-    color: rgba(36, 27, 51, 0.55);
+    color: var(--color-ink-muted);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-size: 0.8rem;
@@ -245,7 +246,7 @@ input:focus-visible {
 .sound-toggle {
     position: fixed;
     top: 1rem;
-    right: 1rem;
+    inset-inline-end: 1rem;
     z-index: 40;
     width: 2.75rem;
     height: 2.75rem;
@@ -286,16 +287,30 @@ input:focus-visible {
 }
 
 .link-btn--muted {
-    color: rgba(36, 27, 51, 0.4);
+    color: var(--color-ink-muted);
     text-decoration: underline;
     font-weight: 600;
 }
 
 .link-btn--muted:hover {
-    color: rgba(36, 27, 51, 0.7);
+    color: var(--color-ink);
 }
 
 /* ---------- Form ---------- */
+
+.field {
+    text-align: left;
+}
+
+.field__label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-ink-muted);
+    margin: 0 0 0.25rem;
+}
 
 .text-input {
     width: 100%;
@@ -410,7 +425,7 @@ input:focus-visible {
 
 .stat__label {
     font-size: 0.7rem;
-    color: rgba(36, 27, 51, 0.5);
+    color: var(--color-ink-muted);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -421,6 +436,7 @@ input:focus-visible {
     font-size: 1.5rem;
     font-weight: 900;
     margin: 0;
+    font-variant-numeric: tabular-nums;
 }
 
 .stat__value--score {
@@ -461,7 +477,7 @@ input:focus-visible {
 
 .score-tile__name {
     font-size: 0.625rem;
-    color: rgba(36, 27, 51, 0.5);
+    color: var(--color-ink-muted);
     font-weight: 700;
     text-transform: uppercase;
     margin: 0;
@@ -476,10 +492,11 @@ input:focus-visible {
     font-weight: 900;
     color: var(--player-color-dark, var(--color-ink));
     margin: 0;
+    font-variant-numeric: tabular-nums;
 }
 
 .btn--end {
-    margin-left: 1rem;
+    margin-inline-start: 1rem;
     padding: 0.5rem 0.75rem;
     border-radius: 0.5rem;
     font-size: 0.75rem;
@@ -527,6 +544,7 @@ input:focus-visible {
     font-size: 3rem;
     font-weight: 900;
     color: var(--color-white);
+    font-variant-numeric: tabular-nums;
 }
 
 .target-circle__value::selection {
@@ -646,12 +664,12 @@ input:focus-visible {
 .turn-indicator {
     position: absolute;
     top: 0.5rem;
-    left: 0.75rem;
+    inset-inline-start: 0.75rem;
     font-size: 0.625rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: rgba(36, 27, 51, 0.5);
+    color: var(--color-ink-muted);
 }
 
 .turn-indicator__name {
@@ -668,7 +686,7 @@ input:focus-visible {
 }
 
 .equation-text.is-waiting {
-    color: rgba(36, 27, 51, 0.3);
+    color: var(--color-ink-muted);
 }
 
 .equation-text.is-success {
@@ -765,7 +783,7 @@ input:focus-visible {
 .result-panel__label {
     font-family: var(--font-display);
     font-size: 0.85rem;
-    color: rgba(36, 27, 51, 0.5);
+    color: var(--color-ink-muted);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -778,6 +796,7 @@ input:focus-visible {
     font-weight: 900;
     color: var(--color-tangerine-dark);
     margin: 0;
+    font-variant-numeric: tabular-nums;
 }
 
 .podium {
@@ -795,8 +814,9 @@ input:focus-visible {
 
 .podium-row {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 0.35rem 0.75rem;
     padding: 1rem;
     border-radius: var(--radius-sm);
     background: var(--color-white);
@@ -812,22 +832,27 @@ input:focus-visible {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    flex: 1 1 140px;
+    min-width: 0;
 }
 
 .podium-row__medal {
     font-size: 1.5rem;
+    flex-shrink: 0;
 }
 
 .medal--gold { color: var(--color-sun-dark); }
-.medal--silver { color: rgba(36, 27, 51, 0.4); }
+.medal--silver { color: var(--color-ink-muted); }
 .medal--bronze { color: var(--color-tangerine-dark); }
-.medal--none { color: rgba(36, 27, 51, 0.4); }
+.medal--none { color: var(--color-ink-muted); }
 
 .podium-row__name {
     font-family: var(--font-display);
     font-weight: 700;
     color: var(--color-ink);
     font-size: 1.125rem;
+    min-width: 0;
+    overflow-wrap: break-word;
 }
 
 .podium-row__score {
@@ -835,6 +860,9 @@ input:focus-visible {
     font-weight: 900;
     font-size: 1.5rem;
     color: var(--player-color-dark, var(--color-ink));
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+    margin-inline-start: auto;
 }
 
 /* ---------- Rules modal ---------- */
@@ -859,11 +887,11 @@ input:focus-visible {
 .modal-close {
     position: absolute;
     top: 1rem;
-    right: 1rem;
+    inset-inline-end: 1rem;
     background: none;
     border: none;
     cursor: pointer;
-    color: rgba(36, 27, 51, 0.4);
+    color: var(--color-ink-muted);
     font-size: 1.5rem;
     transition: color 0.15s ease;
 }
@@ -880,7 +908,7 @@ input:focus-visible {
     font-size: 0.875rem;
     max-height: 60vh;
     overflow-y: auto;
-    padding-right: 0.5rem;
+    padding-inline-end: 0.5rem;
     text-align: left;
 }
 
@@ -926,7 +954,7 @@ input:focus-visible {
 
 .site-footer {
     margin-top: 2rem;
-    color: rgba(36, 27, 51, 0.5);
+    color: var(--color-ink-muted);
     font-size: 0.875rem;
     font-weight: 600;
     z-index: 10;
@@ -944,7 +972,7 @@ input:focus-visible {
 
 .icon-inline {
     vertical-align: middle;
-    margin-right: 0.25rem;
+    margin-inline-end: 0.25rem;
 }
 
 /* ---------- Utility ---------- */

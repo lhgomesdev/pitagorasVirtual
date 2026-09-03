@@ -50,6 +50,7 @@ const UIElements = {
     skipText: document.getElementById('skip-text'),
     endSubtitle: document.getElementById('end-subtitle'),
     rulesModal: document.getElementById('rules-modal'),
+    modalCloseBtn: document.getElementById('modal-close-btn'),
 
     bestScoreBadge: document.getElementById('best-score-badge'),
     bestScoreValue: document.getElementById('best-score-value'),
@@ -93,22 +94,55 @@ function addPlayerInput() {
     const count = UIElements.playersList.children.length;
     if (count >= 4) return;
 
+    const playerNumber = count + 1;
+    const inputId = `player-input-${playerNumber}`;
+
+    const field = document.createElement('div');
+    field.className = 'field';
+
+    const label = document.createElement('label');
+    label.className = 'field__label';
+    label.setAttribute('for', inputId);
+    label.textContent = `Nome do Jogador ${playerNumber}`;
+
     const input = document.createElement('input');
     input.type = 'text';
-    input.setAttribute('aria-label', `Nome do Jogador ${count + 1}`);
+    input.id = inputId;
     input.className = 'player-input text-input';
-    input.value = `Jogador ${count + 1}`;
-    UIElements.playersList.appendChild(input);
+    input.value = `Jogador ${playerNumber}`;
 
-    if (count + 1 >= 4) UIElements.addPlayerBtn.classList.add('hidden');
+    field.appendChild(label);
+    field.appendChild(input);
+    UIElements.playersList.appendChild(field);
+
+    if (playerNumber >= 4) UIElements.addPlayerBtn.classList.add('hidden');
 }
 
+let rulesTrigger = null;
+
 function openRules() {
+    rulesTrigger = document.activeElement;
     UIElements.rulesModal.classList.remove('hidden');
+    UIElements.mainMenu.inert = true;
+    UIElements.multiSetup.inert = true;
+    UIElements.game.inert = true;
+    UIElements.end.inert = true;
+    UIElements.modalCloseBtn.focus();
+    document.addEventListener('keydown', handleRulesKeydown);
 }
 
 function closeRules() {
     UIElements.rulesModal.classList.add('hidden');
+    UIElements.mainMenu.inert = false;
+    UIElements.multiSetup.inert = false;
+    UIElements.game.inert = false;
+    UIElements.end.inert = false;
+    document.removeEventListener('keydown', handleRulesKeydown);
+    if (rulesTrigger) rulesTrigger.focus();
+}
+
+function handleRulesKeydown(e) {
+    if (e.key === 'Escape') closeRules();
 }
 
 function startSingleplayer() {
@@ -419,6 +453,7 @@ function successRound(finalEq) {
     cards = cards.filter(c => !usedIds.includes(c.id));
 
     playSuccess();
+    UIElements.equation.textContent = 'Certo!';
     UIElements.equation.classList.add('is-success');
 
     setTimeout(() => {
@@ -429,6 +464,7 @@ function successRound(finalEq) {
 
 function failRound() {
     playFail();
+    UIElements.equation.textContent = 'Errado, tente de novo';
     UIElements.equation.classList.add('is-fail');
     setTimeout(() => {
         UIElements.equation.classList.remove('is-fail');

@@ -48,8 +48,14 @@
 
     <div class="player-form">
         <div id="players-list" class="stack stack--sm">
-            <input type="text" aria-label="Nome do Jogador 1" class="player-input text-input" value="Jogador 1">
-            <input type="text" aria-label="Nome do Jogador 2" class="player-input text-input" value="Jogador 2">
+            <div class="field">
+                <label for="player-input-1" class="field__label">Nome do Jogador 1</label>
+                <input type="text" id="player-input-1" class="player-input text-input" value="Jogador 1">
+            </div>
+            <div class="field">
+                <label for="player-input-2" class="field__label">Nome do Jogador 2</label>
+                <input type="text" id="player-input-2" class="player-input text-input" value="Jogador 2">
+            </div>
         </div>
         <button onclick="addPlayerInput()" id="add-player-btn" class="link-btn add-player-btn">
             <i class="fa-solid fa-user-plus"></i> Adicionar Jogador
@@ -58,10 +64,10 @@
 
     <div class="btn-row">
         <button onclick="backToMenu()" class="btn btn--white">
-            <i class="fa-solid fa-arrow-left"></i> VOLTAR
+            <i class="fa-solid fa-arrow-left"></i> Voltar
         </button>
         <button onclick="startMultiplayer()" class="btn btn--grow btn--grape">
-            INICIAR <i class="fa-solid fa-play"></i>
+            Iniciar <i class="fa-solid fa-play"></i>
         </button>
     </div>
 </div>
@@ -100,10 +106,10 @@
 
     <div class="cards-section">
         <div id="operators-container" class="operators-row">
-            <button onclick="addOperator('+')" class="op-btn op-btn--sun"><i class="fa-solid fa-plus"></i></button>
-            <button onclick="addOperator('-')" class="op-btn op-btn--coral"><i class="fa-solid fa-minus"></i></button>
-            <button onclick="addOperator('*')" class="op-btn op-btn--sky"><i class="fa-solid fa-xmark"></i></button>
-            <button onclick="addOperator('/')" class="op-btn op-btn--leaf"><i class="fa-solid fa-divide"></i></button>
+            <button onclick="addOperator('+')" aria-label="Somar" class="op-btn op-btn--sun"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+            <button onclick="addOperator('-')" aria-label="Subtrair" class="op-btn op-btn--coral"><i class="fa-solid fa-minus" aria-hidden="true"></i></button>
+            <button onclick="addOperator('*')" aria-label="Multiplicar" class="op-btn op-btn--sky"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            <button onclick="addOperator('/')" aria-label="Dividir" class="op-btn op-btn--leaf"><i class="fa-solid fa-divide" aria-hidden="true"></i></button>
         </div>
     </div>
 
@@ -120,14 +126,14 @@
     <div id="action-area" class="action-area">
         <div class="action-row">
             <button id="btn-cancel-turn" onclick="cancelTurn()" class="btn btn--sm btn--white hidden">
-                <i class="fa-solid fa-xmark"></i> CANCELAR
+                <i class="fa-solid fa-xmark"></i> Cancelar
             </button>
             <button onclick="clearEquation()" class="btn btn--sm btn--tangerine">
-                <i class="fa-solid fa-eraser"></i> LIMPAR
+                <i class="fa-solid fa-eraser"></i> Limpar
             </button>
         </div>
         <button onclick="submitEquation()" class="btn btn--block btn--leaf">
-            <i class="fa-solid fa-paper-plane"></i> ENVIAR RESPOSTA
+            <i class="fa-solid fa-paper-plane"></i> Enviar Resposta
         </button>
     </div>
 
@@ -153,14 +159,14 @@
     <div id="multi-end-content" class="podium hidden"></div>
 
     <button onclick="location.reload()" class="btn btn--block btn--grape">
-        <i class="fa-solid fa-house"></i> VOLTAR AO MENU
+        <i class="fa-solid fa-house"></i> Voltar ao Menu
     </button>
 </div>
 
 <div id="rules-modal" class="modal-overlay hidden">
     <div class="modal panel panel--lg panel--compact">
-        <button onclick="closeRules()" class="modal-close">
-            <i class="fa-solid fa-xmark"></i>
+        <button onclick="closeRules()" id="modal-close-btn" aria-label="Fechar" class="modal-close">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
         </button>
 
         <h2 class="title title--sm"><i class="fa-solid fa-scroll icon icon--grape"></i>Como Jogar</h2>
@@ -188,7 +194,7 @@
         </div>
 
         <button onclick="closeRules()" class="btn btn--block btn--sm btn--grape rules-confirm-btn">
-            ENTENDI, VAMOS LÁ!
+            Entendi, Vamos Lá!
         </button>
     </div>
 </div>
