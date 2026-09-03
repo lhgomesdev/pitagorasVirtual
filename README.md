@@ -1,9 +1,14 @@
 # Pitágoras Virtual 🧮⏱️
 
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
+
 Uma versão digital e de código aberto inspirada no famoso party game de matemática "Pitágoras", de **Reiner Knizia**, publicado pela Adoleta Jogos. Treine seu raciocínio lógico e velocidade em desafios matemáticos dinâmicos!
 
 ## 🔷️ Acesse o site para jogar
-[Link do Site](https://lhgomesdev.github.io/pitagorasVirtual/)
+[pitagoras.lhgomes.dev.br](https://pitagoras.lhgomes.dev.br/)
 
 ## 🎮 Modos de Jogo
 
@@ -20,6 +25,17 @@ Uma versão digital e de código aberto inspirada no famoso party game de matem�
 ## 🧠 Como funciona a "Geração Inteligente de Alvos"
 
 Para evitar a frustração de alvos impossíveis de resolver, o algoritmo do jogo seleciona de 2 a 3 cartas que já estão na mesa e aplica operadores matemáticos aleatoriamente nos bastidores. O resultado dessa conta invisível torna-se o "Alvo" da rodada, garantindo matematicamente que sempre existirá pelo menos uma solução possível.
+
+## 🚀 Rodando localmente
+
+Não há build step — é só clonar e abrir o `index.html` no navegador:
+
+```bash
+git clone https://github.com/lhgomesdev/pitagorasVirtual
+cd pitagorasVirtual
+```
+
+Depois abra `index.html` diretamente (duplo clique ou `start index.html` / `open index.html`).
 
 ## 🤝 Contribuição
 
